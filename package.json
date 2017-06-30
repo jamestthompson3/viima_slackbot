@@ -13,7 +13,6 @@
   "author": "Taylor Thompson",
   "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "libxmljs": "^0.18.7",
     "moment-timezone": "^0.5.13",
