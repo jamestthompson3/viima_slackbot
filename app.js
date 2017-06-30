@@ -22,7 +22,7 @@ app.listen(config.api.port, function() {
   console.log("listening on port" + config.api.port);
 });
 
-app.post("/hello", function(request, res) {
+app.get("/hello", function(request, res) {
   postSlackThings(function(result) {
     res.send("slack message sent")
   });
