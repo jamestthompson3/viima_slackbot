@@ -16,6 +16,7 @@
     "express": "^4.15.3",
     "libxmljs": "^0.18.7",
     "moment-timezone": "^0.5.13",
+    "nets": "^3.2.0",
     "node-slackr": "^0.1.4",
     "request": "^2.81.0",
     "slack-incoming-webhook": "^1.1.0"
