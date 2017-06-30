@@ -1,6 +1,6 @@
 var express = require("express");
 var bodyParser = require("body-parser");
-var request = require("request");
+var requester = require("request");
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -20,8 +20,9 @@ app.post("/hello", function(request, res, next) {
     url: "https://hooks.slack.com/services/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",
     headers: {
       'Content-type':"application/json"
-    }
+    },
     data: {'text':"Testing!"}
   };
-  request.post(options);
+  requester.post(options);
+  console.log("it worked!")
 });
