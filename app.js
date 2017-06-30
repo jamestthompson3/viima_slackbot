@@ -1,5 +1,6 @@
 var express = require("express");
 var bodyParser = require("body-parser");
+var request = require("request");
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -15,14 +16,12 @@ app.listen(port, function() {
 });
 
 app.post("/hello", function(request, res, next) {
-  var username = req.body.user_name;
-  var payload = {
-    text: "Hi" + username + ' , the viima bot is alive!!'
+  var options = {
+    url: "https://hooks.slack.com/services/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",
+    headers: {
+      'Content-type':"application/json"
+    }
+    data: {'text':"Testing!"}
   };
-  if (username != 'slackbot') {
-    return res.status(200).json(payload);
-  }
-  else {
-    return res.status(200).end();
-  }
+  request.post(options);
 });
