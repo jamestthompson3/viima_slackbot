@@ -1,7 +1,6 @@
 var express = require("express");
 var config = require("./config");
 var https = require("https");
-var xmljs = require("libxmljs");
 var Client = require('node-rest-client').Client;
 var parseJson = require('parse-json');
 var json = '{\n\t"foo": true,\n}';
@@ -18,7 +17,6 @@ slack = new Slack(config.slack.webhook_url, {
 var app = express();
 
 app.get('/', function(request, res) {
-  res.status(200).send("Hi!");
 });
 
 app.listen(config.api.port, function() {
