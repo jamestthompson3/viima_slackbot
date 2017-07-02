@@ -39,7 +39,7 @@ app.post("/hello", function(request, res) {
 });
 app.post("/test", function(request, res) {
   console.log(request);
-  res.send(request);
+  res.send("hello");
 });
 app.get("/update", function(request ,res) {
   getViimaInfo(function(result) {
