@@ -8,7 +8,7 @@ config.slack={};
 config.app.name = "Viima Bot";
 
 // API Settings
-config.api.port = 3000;
+config.api.port = process.env.PORT || 3000;
 
 // Slack Settings
 config.slack.username = config.app.name;
