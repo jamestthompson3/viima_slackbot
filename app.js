@@ -35,7 +35,7 @@ app.listen(config.api.port, function() {
 });
 
 // Schedule checks on Viima product board
-var job = new CronJob('*/3 * * * * *',function() {
+var job = new CronJob('*/2 * * * * *',function() {
   var client = new Client();
   client.get("https://app.viima.com/api/customers/1410/activities/", function (data, response) {
     var data = data.results
@@ -47,7 +47,6 @@ var job = new CronJob('*/3 * * * * *',function() {
     firebase.database().ref("items").once("value").then((snapshot) => {
         prev_data = snapshot.val();
         if (prev_data.length === id_array.length) {
-          console.log("Everything is the same")
         }
         else if (prev_data.length > id_array.length) {
           prev_data.map(function(i) {
@@ -137,13 +136,12 @@ app.post("/who", function(request ,res) {
 
 // Slash Commands
 function postSlackThings(things, cb) {
-  var hello = {"Hi! Thanks for using Viima bot! I can do a lot of interesting things."+"\n"
-    "I keep track of your Viima idea boards so that you can be more productive!" + "\n"
-    "Use /whoareyou to see my source code." +"\n"
-    "Use /inspire for a quote to keep you working hard!" +"\n"
-    "Use /board to access the Viima idea board."};
   var messages = {
-    text: hello,
+    text: String()+"Hi! Thanks for using Viima bot! I can do a lot of interesting things."+"\n"
+      +"I keep track of your Viima idea boards so that you can be more productive!" + "\n"
+      +"`/whoareyou` to see my source code." +"\n"
+      +"`/inspire` for a quote to keep you working hard!" +"\n"
+      +"`/board` to access the Viima idea board.",
     channel: config.slack.channel,
     attachments:[]
   };
@@ -158,7 +156,8 @@ function quote() {
   var client = new Client();
   client.get("http://quotes.rest/qod.json?category=inspire", function (data, response) {
     var data = data.contents.quotes
-    var msg = `${data.quote} \n --${data.author}`
+    console.log(data[0].quote);
+    var msg = `${data[0].quote} \n --${data[0].author}`;
     var messages = {
       text: msg,
       channel: config.slack.channel,
