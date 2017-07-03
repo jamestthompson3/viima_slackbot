@@ -115,7 +115,6 @@ app.post("/test", function(request, res) {
 app.get("/events", function(request ,res) {
   res.send(request.challenge)
   });
-});
 
 // Slash Commands
 function postSlackThings(things, cb) {
