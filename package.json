@@ -13,6 +13,7 @@
   "author": "Taylor Thompson",
   "license": "MIT",
   "dependencies": {
+    "cron": "^1.2.1",
     "express": "^4.15.3",
     "firebase": "^4.1.3",
     "node-celery": "^0.2.8",

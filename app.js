@@ -3,7 +3,9 @@ var config = require("./config");
 var https = require("https");
 var Client = require('node-rest-client').Client;
 var firebase = require('firebase');
+var CronJob = require('cron').CronJob;
 
+// Config Firebase
 var fire_config = {
   apiKey: "AIzaSyDlVBhcGfHc3PfgKdiqoRud44AfDfvB5Dg",
   authDomain: "viimabot-c9f70.firebaseapp.com",
@@ -31,36 +33,9 @@ app.listen(config.api.port, function() {
   console.log("listening on port" + config.api.port);
 });
 
-app.post("/hello", function(request, res) {
-  postSlackThings(function(result) {
-    console.log("post received.")
-    res.send("slack message sent")
-  });
-});
-app.post("/test", function(request, res) {
-  console.log(request);
-  res.send("hello");
-});
-app.get("/update", function(request ,res) {
-  getViimaInfo(function(result) {
-    res.send("slack message sent")
-  });
-});
-// Utility functions
-function postSlackThings(things, cb) {
-  var hello = "hello <!channel|channel>! I'm alive!";
-  var messages = {
-    text: hello,
-    channel: config.slack.channel,
-    attachments:[]
-  };
-  slack.notify(messages, function(err, result) {
-    if(err !== null) {
-      console.log(err, result);
-    }
-  });
-}
-function getViimaInfo() {
+// Schedule checks on Viima product board
+var job = new CronJob('*/3 * * * * *',function() {
+  console.log("cron running");
   var client = new Client();
   client.get("https://app.viima.com/api/customers/1410/activities/", function (data, response) {
     var data = data.results
@@ -68,11 +43,11 @@ function getViimaInfo() {
       return i.id
     });
 
+
     firebase.database().ref("items").once("value").then((snapshot) => {
         prev_data = snapshot.val();
         if (prev_data.length === id_array.length) {
           console.log("Everything is the same")
-          updateFirebase(data);
         }
         else if (prev_data.length > id_array.length) {
           prev_data.map(function(i) {
@@ -123,25 +98,49 @@ function getViimaInfo() {
           updateFirebase(data);
         }
       });
+    });
+  } ,function(){console.log("cronjob finished")},true,'America/Los_Angeles');
 
-    // var slack_message = {
-    //   text: data.fullname + " created " + data.name + " on Viima! Check it out at " + data.url,
-    //   channel: config.slack.channel
-    // };
-    // slack.notify(slack_message, function(err, result) {
-    //   if(err != null) {
-    //     console.log(err, result);
-    //   }
-    // });
-  // }
+app.post("/hello", function(request, res) {
+  postSlackThings(function(result) {
+    console.log("post received.")
+    res.send("slack message sent")
+  });
 });
+app.post("/test", function(request, res) {
+  console.log(request);
+  res.send("hello");
+});
+app.get("/update", function(request ,res) {
+  getViimaInfo(function(result) {
+    res.send("slack message sent")
+  });
+});
+
+// Slash Commands
+function postSlackThings(things, cb) {
+  var hello = "hello <!channel|channel>! I'm alive!";
+  var messages = {
+    text: hello,
+    channel: config.slack.channel,
+    attachments:[]
+  };
+  slack.notify(messages, function(err, result) {
+    if(err !== null) {
+      console.log(err, result);
+    }
+  });
 }
+
+// Function to get the info from Viima
+
+
 function updateFirebase (data) {
   for (var i = 0; i < data.length; i++) {
 
     firebase.database().ref(`items/`).set(
       data
     );
-    console.log("firebase updated");
+    console.log("firebase updated",[i]);
   }
 }
