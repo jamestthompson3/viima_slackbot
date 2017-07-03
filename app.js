@@ -101,19 +101,19 @@ var job = new CronJob('*/3 * * * * *',function() {
     });
   } ,function(){console.log("cronjob finished")},true,'America/Los_Angeles');
 
-app.post("/hello", function(request, res) {
-  postSlackThings(function(result) {
-    console.log("post received.")
-    res.send("slack message sent")
-  });
+app.post("/help", function(request, res) {
+  res.send('Testing...')
+  // postSlackThings(function(result) {
+  //   console.log("post received.")
+  //   res.send("slack message sent")
+  // });
 });
 app.post("/test", function(request, res) {
   console.log(request);
   res.send("hello");
 });
-app.get("/update", function(request ,res) {
-  getViimaInfo(function(result) {
-    res.send("slack message sent")
+app.get("/events", function(request ,res) {
+  res.send(request.challenge)
   });
 });
 
@@ -132,9 +132,7 @@ function postSlackThings(things, cb) {
   });
 }
 
-// Function to get the info from Viima
-
-
+//  Update board db
 function updateFirebase (data) {
   for (var i = 0; i < data.length; i++) {
 
