@@ -35,7 +35,6 @@ app.listen(config.api.port, function() {
 
 // Schedule checks on Viima product board
 var job = new CronJob('*/3 * * * * *',function() {
-  console.log("cron running");
   var client = new Client();
   client.get("https://app.viima.com/api/customers/1410/activities/", function (data, response) {
     var data = data.results
@@ -101,24 +100,47 @@ var job = new CronJob('*/3 * * * * *',function() {
     });
   } ,function(){console.log("cronjob finished")},true,'America/Los_Angeles');
 
+// Define app routes
 app.post("/help", function(request, res) {
-  res.send('Testing...')
-  // postSlackThings(function(result) {
-  //   console.log("post received.")
-  //   res.send("slack message sent")
-  // });
+  postSlackThings(function(result) {
+    console.log("post received.")
+  });
 });
-app.post("/test", function(request, res) {
-  console.log(request);
-  res.send("hello");
+app.post("/inspire", function(request, res) {
+  quote();
 });
-app.get("/events", function(request ,res) {
-  res.send(request.challenge)
+app.post("/who", function(request ,res) {
+  var messages = {
+    text: "https://github.com/jamestthompson3/viima_slackbot",
+    channel: config.slack.channel,
+    attachments: []
+  };
+  slack.notify(messages, function(err, result) {
+    if(err !== null) {
+      console.log(err, result);
+    }
+  });
+  });
+  app.post("/board", function(request, res) {
+    var messages = {
+      text: "https://app.viima.com/tantapay/tutorial-board/",
+      channel: config.slack.channel,
+      attachments: []
+    };
+    slack.notify(messages, function(err, result) {
+      if(err !== null) {
+        console.log(err, result);
+      }
+    });
   });
 
 // Slash Commands
 function postSlackThings(things, cb) {
-  var hello = "hello <!channel|channel>! I'm alive!";
+  var hello = "Hi! Thanks for using Viima bot! I can do a lot of interesting things."+"\n"
+    "I keep track of your Viima idea boards so that you can be more productive!" + "\n"
+    "Use /whoareyou to see my source code." +"\n"
+    "Use /inspire for a quote to keep you working hard!" +"\n"
+    "Use /board to access the Viima idea board.";
   var messages = {
     text: hello,
     channel: config.slack.channel,
@@ -131,6 +153,23 @@ function postSlackThings(things, cb) {
   });
 }
 
+function quote() {
+  var client = new Client();
+  client.get("http://quotes.rest/qod.json?category=inspire", function (data, response) {
+    var data = data.contents.quotes
+    var msg = `${data.quote} \n --${data.author}`
+    var messages = {
+      text: msg,
+      channel: config.slack.channel,
+      attachments:[]
+    };
+    slack.notifiy(messages, function(err, result) {
+      if (err != null) {
+        console.log(err, result);
+      }
+    });
+});
+}
 //  Update board db
 function updateFirebase (data) {
   for (var i = 0; i < data.length; i++) {
