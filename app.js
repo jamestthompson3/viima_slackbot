@@ -139,7 +139,7 @@ function postSlackThings(things, cb) {
   var messages = {
     text: String()+"Hi! Thanks for using Viima bot! I can do a lot of interesting things."+"\n"
       +"I keep track of your Viima idea boards so that you can be more productive!" + "\n"
-      +"`/whoareyou` to see my source code." +"\n"
+      +"`/whoareyou` to get a link to my source code." +"\n"
       +"`/inspire` for a quote to keep you working hard!" +"\n"
       +"`/board` to access the Viima idea board.",
     channel: config.slack.channel,
