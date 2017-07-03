@@ -4,10 +4,11 @@ var https = require("https");
 var Client = require('node-rest-client').Client;
 var firebase = require('firebase');
 var CronJob = require('cron').CronJob;
+var dotenv = require('dotenv');
 
 // Config Firebase
 var fire_config = {
-  apiKey: "AIzaSyDlVBhcGfHc3PfgKdiqoRud44AfDfvB5Dg",
+  apiKey: process.env.FIREBASE,
   authDomain: "viimabot-c9f70.firebaseapp.com",
   databaseURL: "https://viimabot-c9f70.firebaseio.com",
   storageBucket: "viimabot-c9f70.appspot.com",
@@ -136,11 +137,11 @@ app.post("/who", function(request ,res) {
 
 // Slash Commands
 function postSlackThings(things, cb) {
-  var hello = "Hi! Thanks for using Viima bot! I can do a lot of interesting things."+"\n"
+  var hello = {"Hi! Thanks for using Viima bot! I can do a lot of interesting things."+"\n"
     "I keep track of your Viima idea boards so that you can be more productive!" + "\n"
     "Use /whoareyou to see my source code." +"\n"
     "Use /inspire for a quote to keep you working hard!" +"\n"
-    "Use /board to access the Viima idea board.";
+    "Use /board to access the Viima idea board."};
   var messages = {
     text: hello,
     channel: config.slack.channel,
@@ -163,7 +164,7 @@ function quote() {
       channel: config.slack.channel,
       attachments:[]
     };
-    slack.notifiy(messages, function(err, result) {
+    slack.notify(messages, function(err, result) {
       if (err != null) {
         console.log(err, result);
       }
