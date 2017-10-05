@@ -1,5 +1,7 @@
 var config = require("../config");
+var Client = require('node-rest-client').Client;
 Slack = require("node-slackr");
+
 var slack = new Slack(config.slack.webhook_url, {
   channel: config.slack.channel,
   username: config.slack.username,

@@ -1,7 +1,6 @@
 var express = require("express");
 var config = require("./config");
 var https = require("https");
-var Client = require('node-rest-client').Client;
 var dotenv = require('dotenv');
 var slash = require("./helpers/slash_commands");
 var cron = require("./helpers/cron");
